@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { HomeViewTranslations } from '../constants/translations.constants.ts';
-  import Button from 'primevue/button';
-  import { translate } from '../../../../components/translation/translate.ts';
+  import CreateDeckButton from '../../../../components/navigation/CreateDeckButton.vue';
+  import CreateFolderButton from '../../../../components/navigation/CreateFolderButton.vue';
 </script>
 
 <template>
@@ -10,15 +10,17 @@
     <Translation :id="HomeViewTranslations.ZeroState.Heading" tag="h3" />
     <Translation :id="HomeViewTranslations.ZeroState.Description" tag="p" color="secondary" />
     <div class="button-container">
-      <Button :label="translate(HomeViewTranslations.ZeroState.Buttons.CreateFolder)" icon="pi pi-folder-plus" severity="secondary" />
-      <Button :label="translate(HomeViewTranslations.ZeroState.Buttons.CreateDeck)" icon="pi pi-plus" />
+      <CreateFolderButton> <Translation :id="HomeViewTranslations.ZeroState.Buttons.CreateFolder" /></CreateFolderButton>
+      <CreateDeckButton>
+        <Translation :id="HomeViewTranslations.ZeroState.Buttons.CreateDeck" />
+      </CreateDeckButton>
     </div>
   </section>
 </template>
 
 <style scoped>
   .wrapper {
-    background-color: var(--p-surface-0);
+    background-color: var(--p-content-hover-background);
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,15 +1,19 @@
 <script setup lang="ts">
   import { AppHeadingTranslations } from './AppHeading.translations.ts';
-  import Button from 'primevue/button';
-  import { translate } from '../../components/translation/translate.ts';
+  import CreateDeckButton from '../../components/navigation/CreateDeckButton.vue';
+  import CreateFolderButton from '../../components/navigation/CreateFolderButton.vue';
 </script>
 
 <template>
   <header>
     <Translation v-bind:id="AppHeadingTranslations.Heading" tag="h2" />
     <div class="button-container">
-      <Button :label="translate(AppHeadingTranslations.Buttons.NewFolder)" icon="pi pi-folder-plus" severity="secondary" />
-      <Button :label="translate(AppHeadingTranslations.Buttons.NewDeck)" icon="pi pi-plus" />
+      <CreateFolderButton>
+        <Translation :id="AppHeadingTranslations.Buttons.NewFolder" />
+      </CreateFolderButton>
+      <CreateDeckButton :textTranslation="AppHeadingTranslations.Buttons.NewDeck">
+        <Translation :id="AppHeadingTranslations.Buttons.NewDeck" />
+      </CreateDeckButton>
     </div>
   </header>
 </template>
