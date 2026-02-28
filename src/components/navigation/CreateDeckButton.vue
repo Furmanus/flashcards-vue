@@ -4,7 +4,7 @@
 
 <template>
   <Button asChild v-slot="slotProps">
-    <RouterLink to="/decks/create" :class="slotProps.class">
+    <RouterLink to="/decks/" :class="slotProps.class">
       <span class="p-button-icon p-button-icon-left pi pi-plus"></span>
       <span class="p-button-label">
         <slot>Create deck</slot>

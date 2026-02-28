@@ -4,7 +4,7 @@ import CreateDeckView from '../views/routes/decksCreate/CreateDeckView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
-  { path: '/decks/:deckId', component: CreateDeckView, props: true },
+  { path: '/decks/:deckId?', component: CreateDeckView },
 ];
 
 export const router = createRouter({

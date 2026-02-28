@@ -1,5 +1,5 @@
 import { onUnmounted, type Ref, ref } from 'vue';
-import { flashcardsApiService } from '../api/flashcardsApi.service.ts';
+import { flashcardsApiService } from '../../../../api/flashcardsApi.service.ts';
 import type { DeckModel } from '../../../../interfaces/flashcards.interfaces.ts';
 
 export function useFetchDecks() {
