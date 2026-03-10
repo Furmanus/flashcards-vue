@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { defineProps } from 'vue';
-  import type { DeckModel } from '../../../../interfaces/flashcards.interfaces.ts';
+  import type { FlashcardFolderModel } from '../../../../interfaces/flashcards.interfaces.ts';
 
   interface DecksListProps {
-    decks: DeckModel[];
+    folders: FlashcardFolderModel[];
   }
 
-  const { decks } = defineProps<DecksListProps>();
+  const { folders } = defineProps<DecksListProps>();
 </script>
-<template>{{ decks }}</template>
+<template>{{ folders }}</template>
 
 <style scoped></style>

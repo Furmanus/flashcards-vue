@@ -1,5 +1,5 @@
 export enum CreateDeckFormFields {
   Name = 'name',
-  Folder = 'folder',
+  Folder = 'folderId',
   Description = 'description',
 }

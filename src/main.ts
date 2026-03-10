@@ -8,6 +8,7 @@ import { router } from './router/router.ts';
 import Translation from './components/translation/Translation.vue';
 import { PiniaColada } from '@pinia/colada';
 import { createPinia } from 'pinia';
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App);
 
@@ -23,5 +24,6 @@ app.use(PiniaColada, {
   },
 });
 app.use(router);
+app.use(ToastService);
 app.component('Translation', Translation);
 app.mount('#app');

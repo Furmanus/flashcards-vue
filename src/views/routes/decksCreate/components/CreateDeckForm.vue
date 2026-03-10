@@ -6,35 +6,70 @@
   import InputText from 'primevue/inputtext';
   import Textarea from 'primevue/textarea';
   import FormFieldWrapper from '../../../../components/form/FormFieldWrapper.vue';
-  import { useQuery } from '@pinia/colada';
+  import { useMutation, useQuery, useQueryCache } from '@pinia/colada';
   import { QueryKeys } from '../../../../constants/query.constants.ts';
   import { flashcardsApiService } from '../../../../api/flashcardsApi.service.ts';
   import Select from 'primevue/select';
   import Button from 'primevue/button';
-  import { computed } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
+  import { computed, reactive } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { CreateDeckSchema } from '../../../../schema/flashcards.schema.ts';
+  import { AppRoutes } from '../../../../router/router.ts';
 
+  const queryCache = useQueryCache();
   const { data, asyncStatus } = useQuery({
     key: [QueryKeys.Folders],
-    query: flashcardsApiService.getFolders,
+    query: flashcardsApiService.getFolders.bind(flashcardsApiService),
+  });
+  const router = useRouter();
+  const formData = reactive({
+    [CreateDeckFormFields.Name]: '',
+    [CreateDeckFormFields.Folder]: undefined,
+    [CreateDeckFormFields.Description]: undefined,
+  });
+  const { mutate, asyncStatus: mutationAsyncStatus } = useMutation({
+    mutation: flashcardsApiService.createDeck.bind(flashcardsApiService),
+    onSuccess: () => {
+      queryCache.invalidateQueries({ key: [QueryKeys.Folders] });
+      router.push(AppRoutes.Home);
+    },
+    onError: () => {
+      console.log('ERROR'); // TODO handle mutation error
+    },
   });
   const foldersSelectPlaceholder = computed(() =>
     translate(
-      !data || asyncStatus.value !== 'idle'
+      Number(data?.value?.length) > 0 || asyncStatus.value !== 'idle'
         ? CreateDeckTranslations.FormFields.Folder.NoFolderSelectedOption
         : CreateDeckTranslations.FormFields.Folder.NoFoldersAvailableOption,
     ),
   );
-  const router = useRouter();
-  const currentRoute = useRoute();
-  const editedDeckId = currentRoute.params.id as string;
+  // const currentRoute = useRoute();
+  // const editedDeckId = currentRoute.params.id as string; // TODO dorób edycję
+  const selectOptions = computed(() =>
+    data.value?.map((folder) => {
+      if (folder.id === '') {
+        return {
+          ...folder,
+          name: translate(CreateDeckTranslations.FormFields.Folder.NoFolderSelectedOption),
+        };
+      }
 
-  console.log('EDITED DECK ID', editedDeckId);
+      return folder;
+    }),
+  );
+  const isSubmitting = computed(() => mutationAsyncStatus.value !== 'idle');
 
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
 
-    console.log('VALUES', new FormData(event.target as HTMLFormElement));
+    const parseResult = CreateDeckSchema.safeParse(formData);
+
+    if (parseResult.success) {
+      return mutate(parseResult.data);
+    } else {
+      console.error('Validation failed:', parseResult.error); // TODO handle validation errors
+    }
   }
 </script>
 
@@ -47,6 +82,8 @@
       <InputText
         :id="CreateDeckFormFields.Name"
         :name="CreateDeckFormFields.Name"
+        :disabled="isSubmitting"
+        v-model="formData[CreateDeckFormFields.Name]"
         :placeholder="translate(CreateDeckTranslations.FormFields.DeckTitle.Placeholder)"
         fluid
       />
@@ -60,9 +97,12 @@
         :id="CreateDeckFormFields.Folder"
         :name="CreateDeckFormFields.Folder"
         :placeholder="foldersSelectPlaceholder"
+        v-model="formData[CreateDeckFormFields.Folder]"
         :loading="asyncStatus !== 'idle'"
-        :disabled="asyncStatus !== 'idle' || !data?.length"
-        :data="data"
+        :disabled="asyncStatus !== 'idle' || !data?.length || isSubmitting"
+        option-label="name"
+        option-value="id"
+        :options="selectOptions"
         fluid
       />
     </FormFieldWrapper>
@@ -73,16 +113,18 @@
       <Textarea
         :id="CreateDeckFormFields.Description"
         :name="CreateDeckFormFields.Description"
+        v-model="formData[CreateDeckFormFields.Description]"
+        :disabled="isSubmitting"
         :placeholder="translate(CreateDeckTranslations.FormFields.Description.Placeholder)"
         rows="5"
         fluid
       />
     </FormFieldWrapper>
     <div class="buttons-wrapper">
-      <Button severity="secondary" type="button" @click="router.back()" outlined>
+      <Button severity="secondary" type="button" @click="router.back()" outlined :disabled="isSubmitting">
         <Translation :id="CreateDeckTranslations.Buttons.Cancel" />
       </Button>
-      <Button type="submit">
+      <Button type="submit" :disabled="asyncStatus !== 'idle' || isSubmitting" :loading="isSubmitting">
         <Translation :id="CreateDeckTranslations.Buttons.Create" />
       </Button>
     </div>

@@ -8,7 +8,7 @@ export const CreateDeckTranslations = {
     },
     Folder: {
       Label: ['Folder (Optional)'],
-      NoFolderSelectedOption: ['Select folder'],
+      NoFolderSelectedOption: ['No folder'],
       NoFoldersAvailableOption: ['No folders available'],
     },
     Description: {

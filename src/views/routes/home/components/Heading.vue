@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import CreateDeckButton from '../../../../components/navigation/CreateDeckButton.vue';
-  import CreateFolderButton from '../../../../components/navigation/CreateFolderButton.vue';
+  import CreateFolderButton from './CreateFolderButton.vue';
   import { HomeViewTranslations } from '../constants/translations.constants.ts';
 </script>
 
