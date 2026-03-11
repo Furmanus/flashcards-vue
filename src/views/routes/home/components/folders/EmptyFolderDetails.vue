@@ -15,6 +15,7 @@
 <style scoped>
   .noDataWrapper {
     width: 100%;
+    padding: 1rem;
   }
 
   .noDataContent {
