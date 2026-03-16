@@ -32,6 +32,18 @@ class FlashcardsApiService {
     return decks;
   }
 
+  public async getDeckDetails(id: string, {}: FetchOptions = {}): Promise<DeckPresentationModel | undefined> {
+    const decks = await this.getDecks();
+    const flashcards = await this.getFlashcards();
+    const deck = decks.find((deck) => deck.id === id);
+
+    if (deck) {
+      deck.flashcards = flashcards.filter((flashcard) => flashcard.deckId === deck.id);
+
+      return deck;
+    }
+  }
+
   public async createDeck(deckData: Omit<DeckModel, 'id'>, {}: FetchOptions = {}): Promise<void> {
     const decks = (await this.getDecks()) as DeckModel[];
 

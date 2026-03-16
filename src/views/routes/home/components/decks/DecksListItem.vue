@@ -2,21 +2,32 @@
   import type { DeckModel } from '../../../../../interfaces/flashcards.interfaces.ts';
   import Translation from '../../../../../components/translation/Translation.vue';
   import { HomeViewTranslations } from '../../constants/translations.constants.ts';
+  import { AppRoutes } from '../../../../../router/router.ts';
+  import { useRouter } from 'vue-router';
 
   interface DecksListItemProps {
     deck: DeckModel;
   }
 
   const { deck } = defineProps<DecksListItemProps>();
+  const href = AppRoutes.DeckDetails.replace(':deckId', deck.id);
+  const { push } = useRouter();
+  const handleClick = (e: MouseEvent) => {
+    e.preventDefault();
+
+    push(href);
+  };
 </script>
 
 <template>
   <li>
-    <div class="infoContainer">
-      <h4 class="heading" :title="deck.name">{{ deck.name }}</h4>
-      <p class="description" :title="deck.description">{{ deck.description }}</p>
-    </div>
-    <Translation class="quantity" :id="HomeViewTranslations.DeckList.DeckCard.CardQuantity" :values="{ quantity: '0' }" tag="p" />
+    <a :href="href" @click="handleClick">
+      <div class="infoContainer">
+        <h4 class="heading" :title="deck.name">{{ deck.name }}</h4>
+        <p class="description" :title="deck.description">{{ deck.description }}</p>
+      </div>
+      <Translation class="quantity" :id="HomeViewTranslations.DeckList.DeckCard.CardQuantity" :values="{ quantity: '0' }" tag="p" />
+    </a>
   </li>
 </template>
 
@@ -24,10 +35,6 @@
   li {
     border-radius: var(--p-border-radius-lg);
     border: 1px solid var(--p-content-border-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
     width: 20rem;
     aspect-ratio: 1.75;
     gap: 0.5rem;
@@ -45,6 +52,16 @@
         0 4px 12px 1px var(--p-content-hover-background);
       transform: translateY(-2px);
     }
+
+    & > a {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-decoration: none;
+    }
   }
 
   .infoContainer {
@@ -58,7 +75,7 @@
   }
 
   .heading {
-    color: var(--p-text-color-primary);
+    color: var(--p-text-color);
     text-align: left;
     width: 100%;
     font-size: 0.925rem;
@@ -71,7 +88,7 @@
   .description {
     width: 100%;
     text-align: left;
-    color: var(--p-text-color-secondary);
+    color: var(--p-text-muted-color);
     font-size: 0.875rem;
     margin-block: 0;
     display: -webkit-box;
@@ -85,7 +102,7 @@
     width: 100%;
     text-align: left;
     border-top: 1px solid var(--p-content-border-color);
-    color: var(--p-text-color-secondary);
+    color: var(--p-text-color);
     margin-block: 0;
     padding-top: 0.25rem;
     font-size: 0.875rem;

@@ -19,5 +19,6 @@ export const CreateDeckTranslations = {
   Buttons: {
     Cancel: ['Cancel'],
     Create: ['Create Deck'],
+    Edit: ['Edit Deck'],
   },
 } as const;

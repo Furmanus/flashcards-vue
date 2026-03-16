@@ -12,9 +12,10 @@
   import Select from 'primevue/select';
   import Button from 'primevue/button';
   import { computed, reactive } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { CreateDeckSchema } from '../../../../schema/flashcards.schema.ts';
   import { AppRoutes } from '../../../../router/router.ts';
+  import type { DeckModel } from '../../../../interfaces/flashcards.interfaces.ts';
 
   const queryCache = useQueryCache();
   const { data, asyncStatus } = useQuery({
@@ -22,19 +23,40 @@
     query: flashcardsApiService.getFolders.bind(flashcardsApiService),
   });
   const router = useRouter();
+  const currentRoute = useRoute();
+  const editedDeckId = currentRoute.params.deckId as string;
+  const isEditing = !!editedDeckId;
+  const deckData = useQuery({
+    key: [QueryKeys.Decks, editedDeckId],
+    query: () => {
+      return flashcardsApiService.getDeckDetails(editedDeckId);
+    },
+    enabled: isEditing,
+  });
+  const isFetchingEditedDeckData = computed(() => deckData.status.value === 'pending');
   const formData = reactive({
-    [CreateDeckFormFields.Name]: '',
-    [CreateDeckFormFields.Folder]: undefined,
-    [CreateDeckFormFields.Description]: undefined,
+    [CreateDeckFormFields.Name]: isEditing && !isFetchingEditedDeckData.value ? deckData.data.value?.name : '',
+    [CreateDeckFormFields.Folder]: isEditing && !isFetchingEditedDeckData.value ? deckData.data.value?.folderId : undefined,
+    [CreateDeckFormFields.Description]: isEditing && !isFetchingEditedDeckData.value ? deckData.data.value?.description : undefined,
   });
   const { mutate, asyncStatus: mutationAsyncStatus } = useMutation({
-    mutation: flashcardsApiService.createDeck.bind(flashcardsApiService),
+    mutation: ({ deckId, data }: { deckId?: string; data: Omit<DeckModel, 'id'> }) => {
+      if (deckId) {
+        return flashcardsApiService.updateDeck(deckId, data);
+      } else {
+        return flashcardsApiService.createDeck(data);
+      }
+    },
     onSuccess: () => {
-      queryCache.invalidateQueries({ key: [QueryKeys.Folders] });
+      queryCache.invalidateQueries({
+        predicate: (entry) => {
+          return entry.key[0] === QueryKeys.Folders || (entry.key[0] === QueryKeys.Decks && entry.key[1] === editedDeckId);
+        },
+      });
       router.push(AppRoutes.Home);
     },
-    onError: () => {
-      console.log('ERROR'); // TODO handle mutation error
+    onError: (e) => {
+      console.log('ERROR', e); // TODO handle mutation error
     },
   });
   const foldersSelectPlaceholder = computed(() =>
@@ -44,8 +66,6 @@
         : CreateDeckTranslations.FormFields.Folder.NoFoldersAvailableOption,
     ),
   );
-  // const currentRoute = useRoute();
-  // const editedDeckId = currentRoute.params.id as string; // TODO dorób edycję
   const selectOptions = computed(() =>
     data.value?.map((folder) => {
       if (folder.id === '') {
@@ -66,7 +86,10 @@
     const parseResult = CreateDeckSchema.safeParse(formData);
 
     if (parseResult.success) {
-      return mutate(parseResult.data);
+      return mutate({
+        deckId: isEditing ? editedDeckId : undefined,
+        data: parseResult.data,
+      });
     } else {
       console.error('Validation failed:', parseResult.error); // TODO handle validation errors
     }
@@ -125,7 +148,7 @@
         <Translation :id="CreateDeckTranslations.Buttons.Cancel" />
       </Button>
       <Button type="submit" :disabled="asyncStatus !== 'idle' || isSubmitting" :loading="isSubmitting">
-        <Translation :id="CreateDeckTranslations.Buttons.Create" />
+        <Translation :id="isEditing ? CreateDeckTranslations.Buttons.Edit : CreateDeckTranslations.Buttons.Create" />
       </Button>
     </div>
   </form>

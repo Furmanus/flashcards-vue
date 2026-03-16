@@ -16,7 +16,7 @@ export const CreateFolderSchema = z.object({
 export const CreateDeckSchema = z.object({
   name: z.string().min(3).max(128),
   description: z.string().min(3).max(1024).optional(),
-  folderId: z.uuid().optional(),
+  folderId: z.union([z.uuid(), z.literal('')]).optional(),
 });
 
 export const DeckSchema = z.object({
