@@ -7,9 +7,10 @@
 
   interface DeckDetailsHeadingProps {
     deckId: string;
+    deckName: string;
   }
 
-  const { deckId } = defineProps<DeckDetailsHeadingProps>();
+  const { deckId, deckName } = defineProps<DeckDetailsHeadingProps>();
 </script>
 
 <template>
@@ -23,7 +24,7 @@
         <LinkButtonIcon :href="AppRoutes.CreateDeck.replace(':deckId?', deckId)" iconName="pi-user-edit" severity="secondary">
           <Translation :id="DeckDetailsTranslations.Heading.EditButton" />
         </LinkButtonIcon>
-        <DeckDetailsHeadingDeleteButton deckId="deckId" />
+        <DeckDetailsHeadingDeleteButton :deckId="deckId" :deckName="deckName" />
       </div>
     </nav>
   </header>

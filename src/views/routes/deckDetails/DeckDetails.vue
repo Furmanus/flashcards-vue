@@ -18,8 +18,9 @@
 </script>
 
 <template>
-  <main>
-    <DeckDetailsHeading :deckId="editedDeckId" />
+  <main v-if="isLoading">Loading...</main>
+  <main v-else>
+    <DeckDetailsHeading :deckId="editedDeckId" :deckName="data?.name!" />
     <div v-if="data !== undefined" class="deckDetails">
       <Translation :id="[data.name]" tag="h3" />
       <Translation v-if="data.description" :id="[data.description]" color="secondary" tag="p" />
@@ -35,8 +36,15 @@
   .deckDetails {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.125rem;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
+
+    & > h3,
+    p {
+      margin-block: 0;
+    }
   }
 </style>

@@ -10,5 +10,13 @@ export const DeckDetailsTranslations = {
       Description: ['Create your first flashcard to get started.'],
       AddFlashcardButton: ['Add Flashcard'],
     },
+    DeleteModal: {
+      Heading: ['Confirm action'],
+      Description: ['Are you sure you want to delete deck {deckName}?'],
+      Buttons: {
+        Cancel: ['No, keep it'],
+        Delete: ['Yes, delete'],
+      },
+    },
   },
 } as const;
