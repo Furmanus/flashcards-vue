@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { DeckDetailsTranslations } from '../constants/translations.constants.ts';
-  import LinkButtonIcon from '../../../../components/LinkButtonIcon.vue';
-  import { AppRoutes } from '../../../../router/router.ts';
   import Translation from '../../../../components/translation/Translation.vue';
+  import DeckDetailsAddFlashcardButton from './DeckDetailsAddFlashcardButton.vue';
 </script>
 
 <template>
@@ -11,9 +10,7 @@
       <Translation :id="DeckDetailsTranslations.Content.ZeroState.Heading" tag="h4" color="primary" />
       <Translation :id="DeckDetailsTranslations.Content.ZeroState.Description" tag="p" color="secondary" />
     </div>
-    <LinkButtonIcon :href="AppRoutes.CreateFlashcard" iconName="pi-plus">
-      <Translation :id="DeckDetailsTranslations.Content.ZeroState.AddFlashcardButton" />
-    </LinkButtonIcon>
+    <DeckDetailsAddFlashcardButton />
   </article>
 </template>
 

@@ -7,6 +7,7 @@
   import DeckDetailsHeading from './components/DeckDetailsHeading.vue';
   import Translation from '../../../components/translation/Translation.vue';
   import DeckDetailsNoFlashcards from './components/DeckDetailsNoFlashcards.vue';
+  import ProgressSpinner from 'primevue/progressspinner';
 
   const currentRoute = useRoute();
   const editedDeckId = currentRoute.params.deckId as string;
@@ -15,10 +16,16 @@
     query: () => flashcardsApiService.getDeckDetails(editedDeckId),
   });
   const hasFlashcards = computed(() => data?.value && data.value.flashcards.length > 0);
+  // TODO display better error
 </script>
 
 <template>
-  <main v-if="isLoading">Loading...</main>
+  <main v-if="isLoading">
+    <ProgressSpinner />
+  </main>
+  <main v-else-if="error">
+    <p>{{ error }}</p>
+  </main>
   <main v-else>
     <DeckDetailsHeading :deckId="editedDeckId" :deckName="data?.name!" />
     <div v-if="data !== undefined" class="deckDetails">
