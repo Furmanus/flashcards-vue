@@ -24,7 +24,13 @@ export const DeckSchema = z.object({
   ...CreateDeckSchema.shape,
 });
 
-export const FlashcardSchema = z.object({
+export const CreateFlashcardSchema = z.object({
   front: z.string().min(3).max(1024),
   back: z.string().min(3).max(8096),
+  deckId: z.uuid(),
+});
+
+export const FlashcardSchema = z.object({
+  ...CreateFlashcardSchema.shape,
+  id: z.uuid(),
 });

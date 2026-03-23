@@ -35,7 +35,7 @@
         v-if="data?.name"
         :values="{ deckName: data.name }"
       />
-      <ProgressSpinner v-else stroke-width="1rem" v-if="status === 'pending'" />
+      <ProgressSpinner class="progress-spinner" v-if="status === 'pending'" />
     </div>
   </header>
 </template>
@@ -58,6 +58,15 @@
     p {
       margin-block: 0;
     }
+  }
+
+  .progress-spinner {
+    flex-grow: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.5rem;
+    align-self: flex-start;
+    margin-inline: 0;
   }
 
   .heading-text {

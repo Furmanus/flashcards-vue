@@ -1,11 +1,19 @@
 import type {
+  CreateFlashcardModel,
   DeckModel,
   DeckPresentationModel,
   FlashcardFolderModel,
   FlashcardModel,
   FolderPresentationModel,
 } from '../interfaces/flashcards.interfaces.ts';
-import { getDecksMockData, getFoldersMockData, saveDecksMockData, saveFoldersMockData } from './flashcardsApi.mock.ts';
+import {
+  getDecksMockData,
+  getFlashcardsMockData,
+  getFoldersMockData,
+  saveDecksMockData,
+  saveFlashcardsMockData,
+  saveFoldersMockData,
+} from './flashcardsApi.mock.ts';
 import { UncategorizedFlashcardsDeckId } from '../constants/flashcards.constants.ts';
 
 type FetchOptions = {
@@ -24,6 +32,10 @@ class FlashcardsApiService {
         const deck = decks.find((deck) => deck.id === flashcard.deckId);
 
         if (deck) {
+          if (!deck.flashcards) {
+            deck.flashcards = [];
+          }
+
           deck.flashcards.push(flashcard);
         }
       }
@@ -80,8 +92,8 @@ class FlashcardsApiService {
 
   public async getFlashcards({}: FetchOptions = {}): Promise<FlashcardModel[]> {
     await wait();
-    // TODO
-    return [];
+
+    return getFlashcardsMockData();
   }
 
   public async getFolders({}: FetchOptions = {}): Promise<FolderPresentationModel[]> {
@@ -142,10 +154,30 @@ class FlashcardsApiService {
 
     saveFoldersMockData(folders.filter((_, index) => index !== folderIndex));
   }
+
+  public async createFlashcard(data: CreateFlashcardModel, FetcherOptions: FetchOptions = {}): Promise<FlashcardModel> {
+    const flashcardModel = {
+      id: crypto.randomUUID(),
+      back: data.back,
+      front: data.front,
+      deckId: data.deckId,
+      easinessFactor: 2.5,
+      lastInterval: 0,
+      nextReviewAt: new Date(),
+      repeats: 0,
+    } satisfies FlashcardModel;
+    const flashcards = (await this.getFlashcards(FetcherOptions)) as FlashcardModel[];
+
+    flashcards.push(flashcardModel);
+
+    saveFlashcardsMockData(flashcards);
+    await wait();
+    return flashcardModel;
+  }
 }
 
 export const flashcardsApiService = new FlashcardsApiService();
 
 function wait() {
-  return new Promise((resolve) => setTimeout(resolve, Math.random() * 2));
+  return new Promise((resolve) => setTimeout(resolve, Math.random() * 2000));
 }

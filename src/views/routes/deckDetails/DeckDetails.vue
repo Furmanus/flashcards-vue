@@ -8,6 +8,7 @@
   import Translation from '../../../components/translation/Translation.vue';
   import DeckDetailsNoFlashcards from './components/DeckDetailsNoFlashcards.vue';
   import ProgressSpinner from 'primevue/progressspinner';
+  import DeckFlashcardsList from './components/deckList/DeckFlashcardsList.vue';
 
   const currentRoute = useRoute();
   const editedDeckId = currentRoute.params.deckId as string;
@@ -16,7 +17,6 @@
     query: () => flashcardsApiService.getDeckDetails(editedDeckId),
   });
   const hasFlashcards = computed(() => data?.value && data.value.flashcards.length > 0);
-  // TODO display better error
 </script>
 
 <template>
@@ -33,6 +33,7 @@
       <Translation v-if="data.description" :id="[data.description]" color="secondary" tag="p" />
     </div>
     <DeckDetailsNoFlashcards v-if="data !== undefined && !hasFlashcards" />
+    <DeckFlashcardsList :flashcards="data?.flashcards" v-else-if="data !== undefined && hasFlashcards" />
   </main>
 </template>
 

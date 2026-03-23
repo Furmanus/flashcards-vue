@@ -4,38 +4,48 @@
   import Textarea from 'primevue/textarea';
   import FormFieldWrapper from '../../../../components/form/FormFieldWrapper.vue';
   import { CreateFlashcardTranslations } from '../constants/translations.constants.ts';
-  import { reactive, ref } from 'vue';
+  import { computed, reactive } from 'vue';
   import { FlashcardsFormFields } from '../constants/form.constants.ts';
   import FormFieldTip from '../../../../components/form/FormFieldTip.vue';
   import Button from 'primevue/button';
   import { useRoute, useRouter } from 'vue-router';
   import { useMutation } from '@pinia/colada';
-  import { FlashcardSchema } from '../../../../schema/flashcards.schema.ts';
+  import { CreateFlashcardSchema } from '../../../../schema/flashcards.schema.ts';
+  import { flashcardsApiService } from '../../../../api/flashcardsApi.service.ts';
+  import type { CreateFlashcardModel } from '../../../../interfaces/flashcards.interfaces.ts';
+  import { AppRoutes } from '../../../../router/router.ts';
 
   const currentRoute = useRoute();
+  const deckId = currentRoute.params.deckId as string;
   const editedFlashcardId = currentRoute.params.flashcardId as string;
   const isEditing = !!editedFlashcardId;
   const router = useRouter();
-  const isSubmitting = ref(false);
   const formState = reactive({
     [FlashcardsFormFields.Question]: '',
     [FlashcardsFormFields.Answer]: '',
   });
   const { asyncStatus, mutate } = useMutation({
-    mutation: () => {
-      return Promise.resolve();
+    mutation: (flashcardData: CreateFlashcardModel) => {
+      return flashcardsApiService.createFlashcard(flashcardData);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      router.push(AppRoutes.DeckDetails.replace(':deckId', deckId));
+    },
     onError: () => {},
   });
+  const isSubmitting = computed(() => asyncStatus.value !== 'idle');
 
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
 
-    const parseResult = FlashcardSchema.safeParse(formState);
+    const parseResult = CreateFlashcardSchema.safeParse({
+      front: formState[FlashcardsFormFields.Question],
+      back: formState[FlashcardsFormFields.Answer],
+      deckId,
+    });
 
     if (parseResult.success) {
-      mutate(parseResult.data as never); // TODO send data to backend
+      mutate(parseResult.data);
     } else {
       console.log(parseResult.error); // TODO show validation errors
     }
