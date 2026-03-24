@@ -9,17 +9,19 @@
   import FormFieldTip from '../../../../components/form/FormFieldTip.vue';
   import Button from 'primevue/button';
   import { useRoute, useRouter } from 'vue-router';
-  import { useMutation } from '@pinia/colada';
+  import { useMutation, useQueryCache } from '@pinia/colada';
   import { CreateFlashcardSchema } from '../../../../schema/flashcards.schema.ts';
   import { flashcardsApiService } from '../../../../api/flashcardsApi.service.ts';
   import type { CreateFlashcardModel } from '../../../../interfaces/flashcards.interfaces.ts';
   import { AppRoutes } from '../../../../router/router.ts';
+  import { QueryKeys } from '../../../../constants/query.constants.ts';
 
   const currentRoute = useRoute();
   const deckId = currentRoute.params.deckId as string;
   const editedFlashcardId = currentRoute.params.flashcardId as string;
   const isEditing = !!editedFlashcardId;
   const router = useRouter();
+  const queryCache = useQueryCache();
   const formState = reactive({
     [FlashcardsFormFields.Question]: '',
     [FlashcardsFormFields.Answer]: '',
@@ -29,9 +31,17 @@
       return flashcardsApiService.createFlashcard(flashcardData);
     },
     onSuccess: () => {
+      queryCache.invalidateQueries({
+        predicate: (entry) => {
+          return entry.key[0] === QueryKeys.Decks || (entry.key[0] === QueryKeys.Decks && entry.key[1] === deckId);
+        },
+      });
+
       router.push(AppRoutes.DeckDetails.replace(':deckId', deckId));
     },
-    onError: () => {},
+    onError: () => {
+      // TODO handle and show error
+    },
   });
   const isSubmitting = computed(() => asyncStatus.value !== 'idle');
 

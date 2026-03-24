@@ -6,7 +6,7 @@
     id: Translation;
     tag?: keyof HTMLElementTagNameMap;
     values?: Record<string, string>;
-    color?: 'primary' | 'secondary';
+    color?: 'primary' | 'secondary' | 'error';
   }
 
   const { id, tag = 'span', color = 'primary', values = {} } = defineProps<TranslationProps>();
@@ -16,6 +16,8 @@
         return 'var(--p-text-color)';
       case 'secondary':
         return 'var(--p-text-muted-color)';
+      case 'error':
+        return 'var(--p-red-600)';
       default:
         throw new Error('Unsupported color value');
     }

@@ -3,6 +3,10 @@ export const DeckDetailsTranslations = {
     BackButton: ['Back to decks'],
     EditButton: ['Edit'],
     DeleteButton: ['Delete'],
+    Actions: {
+      StudyDueCards: ['Study due cards: {quantity}'],
+      StudyAllCards: ['Study All Cards'],
+    },
   },
   Content: {
     ZeroState: {
@@ -17,6 +21,12 @@ export const DeckDetailsTranslations = {
         Cancel: ['No, keep it'],
         Delete: ['Yes, delete'],
       },
+    },
+  },
+  FlashcardList: {
+    FlashcardCard: {
+      DueIcon: ['Due'],
+      NextReview: ['Next review: {date}'],
     },
   },
 } as const;
