@@ -1,15 +1,18 @@
 <script setup lang="ts">
   import { computed, defineProps } from 'vue';
   import type { Translation } from '../../interfaces/translations.interfaces.ts';
+  import type { TypographySizes } from '../typography/typography.interfaces.ts';
+  import { TypographySizeToFontSize } from '../typography/typography.constants.ts';
 
   interface TranslationProps {
     id: Translation;
     tag?: keyof HTMLElementTagNameMap;
     values?: Record<string, string>;
+    size?: TypographySizes;
     color?: 'primary' | 'secondary' | 'error';
   }
 
-  const { id, tag = 'span', color = 'primary', values = {} } = defineProps<TranslationProps>();
+  const { id, tag = 'span', color = 'primary', values = {}, size } = defineProps<TranslationProps>();
   const textColor = computed(() => {
     switch (color) {
       case 'primary':
@@ -31,14 +34,18 @@
 
     return base;
   });
+  const computedSize = computed(() => (!!size ? TypographySizeToFontSize[size] : undefined));
 </script>
 
 <template>
-  <component :is="tag" class="translation">{{ translatedValue }}</component>
+  <component :is="tag" :class="{ translation: true, translationSize: !!computedSize }">{{ translatedValue }}</component>
 </template>
 
 <style scoped>
   .translation {
     color: v-bind(textColor);
+  }
+  .translationSize {
+    font-size: v-bind(computedSize);
   }
 </style>

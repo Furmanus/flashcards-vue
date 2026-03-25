@@ -3,12 +3,22 @@
   import Button from 'primevue/button';
   import { translate } from '../../../../../components/translation/translate.ts';
   import { DeckDetailsTranslations } from '../../constants/translations.constants.ts';
+
+  interface DeckFlashcardsListHeadingProps {
+    dueFlashcards: number;
+  }
+
+  const { dueFlashcards } = defineProps<DeckFlashcardsListHeadingProps>();
 </script>
 
 <template>
   <section>
     <div>
-      <Button :label="translate(DeckDetailsTranslations.Heading.Actions.StudyDueCards, { quantity: '1' })" icon="pi pi-clock" />
+      <Button
+        v-if="dueFlashcards > 0"
+        :label="translate(DeckDetailsTranslations.Heading.Actions.StudyDueCards, { quantity: String(dueFlashcards) })"
+        icon="pi pi-clock"
+      />
       <Button :label="translate(DeckDetailsTranslations.Heading.Actions.StudyAllCards)" icon="pi pi-list" severity="secondary" />
     </div>
     <DeckDetailsAddFlashcardButton />

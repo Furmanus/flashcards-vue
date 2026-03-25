@@ -15,7 +15,7 @@ export type FlashcardModel = {
   deckId: string;
   repeats: number;
   easinessFactor: number;
-  nextReviewAt: Date;
+  nextReviewAt: string;
   lastInterval: number;
 };
 

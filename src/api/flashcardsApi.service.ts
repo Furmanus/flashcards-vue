@@ -163,7 +163,7 @@ class FlashcardsApiService {
       deckId: data.deckId,
       easinessFactor: 2.5,
       lastInterval: 0,
-      nextReviewAt: new Date(),
+      nextReviewAt: new Date().toISOString(),
       repeats: 0,
     } satisfies FlashcardModel;
     const flashcards = (await this.getFlashcards(FetcherOptions)) as FlashcardModel[];
@@ -179,5 +179,5 @@ class FlashcardsApiService {
 export const flashcardsApiService = new FlashcardsApiService();
 
 function wait() {
-  return new Promise((resolve) => setTimeout(resolve, Math.random() * 2000));
+  return new Promise((resolve) => setTimeout(resolve, Math.random() * 20));
 }
