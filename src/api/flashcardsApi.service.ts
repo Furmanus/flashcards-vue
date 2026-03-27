@@ -96,6 +96,17 @@ class FlashcardsApiService {
     return getFlashcardsMockData();
   }
 
+  public async getFlashcardDetails(id: string, {}: FetchOptions = {}): Promise<FlashcardModel> {
+    const flashcards = await this.getFlashcards();
+    const editedFlashcard = flashcards.find((flashcard) => flashcard.id === id);
+
+    if (!editedFlashcard) {
+      return Promise.reject(new Error('Flashcard not found'));
+    }
+
+    return editedFlashcard;
+  }
+
   public async getFolders({}: FetchOptions = {}): Promise<FolderPresentationModel[]> {
     const decks = await this.getDecks();
     const foldersCopy = getFoldersMockData() as FolderPresentationModel[];
@@ -173,6 +184,21 @@ class FlashcardsApiService {
     saveFlashcardsMockData(flashcards);
     await wait();
     return flashcardModel;
+  }
+
+  public async updateFlashcard(id: string, data: CreateFlashcardModel, FetcherOptions: FetchOptions = {}): Promise<FlashcardModel> {
+    const flashcards = await this.getFlashcards(FetcherOptions);
+    const flashcard = flashcards.find((flashcard) => flashcard.id === id);
+
+    if (!flashcard) {
+      throw new Error('Flashcard not found');
+    }
+
+    Object.assign(flashcard, data);
+
+    saveFlashcardsMockData(flashcards);
+    await wait();
+    return flashcard;
   }
 }
 

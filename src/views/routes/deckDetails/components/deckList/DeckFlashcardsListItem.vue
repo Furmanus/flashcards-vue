@@ -7,17 +7,20 @@
   import Translation from '../../../../../components/translation/Translation.vue';
   import { DeckDetailsTranslations } from '../../constants/translations.constants.ts';
   import { translate } from '../../../../../components/translation/translate.ts';
+  import { AppRoutes } from '../../../../../router/router.ts';
+  import { useRouter } from 'vue-router';
 
   const { flashcard } = defineProps<{ flashcard: FlashcardModel }>();
+  const router = useRouter();
+  const deckId = router.currentRoute.value.params.deckId as string;
   const isDue = computed(() => new Date(flashcard.nextReviewAt).getTime() < Date.now());
-  console.log(flashcard);
 </script>
 
 <template>
   <li>
     <header>
-      <div class="headerStart">
-        <Typography size="md" fontWeight="bold">{{ flashcard.front }}</Typography>
+      <div class="headerStart maxWidthContainer">
+        <Typography class="maxWidth" size="md" fontWeight="bold" :title="flashcard.front">{{ flashcard.front }}</Typography>
         <Chip
           v-if="isDue"
           class="dueChip"
@@ -25,10 +28,17 @@
           icon="pi pi-clock"
         />
       </div>
-      <Button aria-label="edit" icon="pi pi-pencil" size="small" severity="secondary" class="editButton p-button-sm" />
+      <Button
+        class="editButton"
+        as="a"
+        severity="secondary"
+        :href="AppRoutes.CreateFlashcard.replace(':deckId', deckId).replace(':flashcardId?', flashcard.id)"
+        icon="pi pi-pencil"
+      >
+      </Button>
     </header>
-    <section>
-      <Typography size="sm" color="secondary">{{ flashcard.back }}</Typography>
+    <section class="maxWidthContainer">
+      <Typography class="maxWidth" size="sm" color="secondary" :title="flashcard.back">{{ flashcard.back }}</Typography>
     </section>
     <Translation
       v-if="!isDue"
@@ -65,16 +75,32 @@
   }
   .dueChip {
     --p-chip-icon-size: 0.75rem;
+    --p-chip-background: var(--p-primary-color);
 
     border: 1px solid var(--p-content-border-color);
     font-size: 0.75rem;
     padding: 0.25rem 1rem;
   }
-  .editButton {
+  .editButton.editButton {
     padding: 0;
+    text-decoration: none;
 
     &:hover {
-      background-color: var(--p-content-hover-background);
+      background: var(--p-content-hover-background);
+      border: none;
     }
+    &:focus-visible {
+      outline: none;
+    }
+  }
+  .maxWidthContainer {
+    max-width: 90%;
+    display: flex;
+  }
+  .maxWidth {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

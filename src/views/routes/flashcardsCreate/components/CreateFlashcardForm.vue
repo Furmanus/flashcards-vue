@@ -4,12 +4,12 @@
   import Textarea from 'primevue/textarea';
   import FormFieldWrapper from '../../../../components/form/FormFieldWrapper.vue';
   import { CreateFlashcardTranslations } from '../constants/translations.constants.ts';
-  import { computed, reactive } from 'vue';
+  import { computed, reactive, watch } from 'vue';
   import { FlashcardsFormFields } from '../constants/form.constants.ts';
   import FormFieldTip from '../../../../components/form/FormFieldTip.vue';
   import Button from 'primevue/button';
   import { useRoute, useRouter } from 'vue-router';
-  import { useMutation, useQueryCache } from '@pinia/colada';
+  import { useMutation, useQuery, useQueryCache } from '@pinia/colada';
   import { CreateFlashcardSchema } from '../../../../schema/flashcards.schema.ts';
   import { flashcardsApiService } from '../../../../api/flashcardsApi.service.ts';
   import type { CreateFlashcardModel } from '../../../../interfaces/flashcards.interfaces.ts';
@@ -20,6 +20,14 @@
   const deckId = currentRoute.params.deckId as string;
   const editedFlashcardId = currentRoute.params.flashcardId as string;
   const isEditing = !!editedFlashcardId;
+  const { data, status } = useQuery({
+    key: [QueryKeys.Flashcards],
+    enabled: isEditing,
+    query: () => {
+      return flashcardsApiService.getFlashcardDetails(editedFlashcardId);
+    },
+  }); // TODO handle error
+  const isFetchingEditedFlashcardData = computed(() => isEditing && status.value === 'pending');
   const router = useRouter();
   const queryCache = useQueryCache();
   const formState = reactive({
@@ -28,6 +36,10 @@
   });
   const { asyncStatus, mutate } = useMutation({
     mutation: (flashcardData: CreateFlashcardModel) => {
+      if (isEditing) {
+        return flashcardsApiService.updateFlashcard(editedFlashcardId, flashcardData);
+      }
+
       return flashcardsApiService.createFlashcard(flashcardData);
     },
     onSuccess: () => {
@@ -44,6 +56,13 @@
     },
   });
   const isSubmitting = computed(() => asyncStatus.value !== 'idle');
+
+  watch(data, (newData) => {
+    if (newData) {
+      formState[FlashcardsFormFields.Question] = newData.front;
+      formState[FlashcardsFormFields.Answer] = newData.back;
+    }
+  });
 
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
@@ -71,7 +90,7 @@
       <Textarea
         :id="FlashcardsFormFields.Question"
         :name="FlashcardsFormFields.Question"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || isFetchingEditedFlashcardData"
         v-model="formState[FlashcardsFormFields.Question]"
         :placeholder="translate(CreateFlashcardTranslations.FormFields.Question.Placeholder)"
         rows="5"
@@ -86,7 +105,7 @@
       <Textarea
         :id="FlashcardsFormFields.Answer"
         :name="FlashcardsFormFields.Answer"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || isFetchingEditedFlashcardData"
         v-model="formState[FlashcardsFormFields.Answer]"
         :placeholder="translate(CreateFlashcardTranslations.FormFields.Answer.Placeholder)"
         rows="8"
@@ -98,7 +117,7 @@
       <Button severity="secondary" type="button" @click="router.back()" outlined :disabled="isSubmitting">
         <Translation :id="CreateFlashcardTranslations.Buttons.Cancel" />
       </Button>
-      <Button type="submit" :disabled="asyncStatus !== 'idle' || isSubmitting" :loading="isSubmitting">
+      <Button type="submit" :disabled="asyncStatus !== 'idle' || isSubmitting || isFetchingEditedFlashcardData" :loading="isSubmitting">
         <Translation :id="isEditing ? CreateFlashcardTranslations.Buttons.Edit : CreateFlashcardTranslations.Buttons.Create" />
       </Button>
     </div>

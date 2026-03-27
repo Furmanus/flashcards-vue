@@ -9,7 +9,6 @@ export const AppRoutes = {
   CreateDeck: '/decks/create/:deckId?',
   DeckDetails: '/decks/:deckId',
   CreateFlashcard: '/flashcards/:deckId/create/:flashcardId?',
-  EditFlashcard: '/flashcards/edit/:flashcardId',
 };
 
 const routes = [
