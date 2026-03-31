@@ -6,6 +6,7 @@ export const DeckDetailsTranslations = {
     Actions: {
       StudyDueCards: ['Study due cards: {quantity}'],
       StudyAllCards: ['Study All Cards'],
+      ExitStudyMode: ['Exit Study Mode'],
     },
   },
   Content: {
@@ -27,6 +28,17 @@ export const DeckDetailsTranslations = {
     FlashcardCard: {
       DueIcon: ['Due'],
       NextReview: ['Next review: {date}'],
+    },
+  },
+  StudyMode: {
+    Heading: ['Card {current} of {total}'],
+    Flashcard: {
+      HeadingFront: ['Question:'],
+      HeadingBack: ['Answer:'],
+      FlipButton: ['Click to flip'],
+      RemindMe: {
+        Title: ['Remind me again in:'],
+      },
     },
   },
 } as const;

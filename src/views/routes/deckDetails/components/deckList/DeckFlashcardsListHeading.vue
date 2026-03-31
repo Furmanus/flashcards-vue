@@ -3,23 +3,42 @@
   import Button from 'primevue/button';
   import { translate } from '../../../../../components/translation/translate.ts';
   import { DeckDetailsTranslations } from '../../constants/translations.constants.ts';
+  import { DeckDetailsMode } from '../../constants/deckDetails.constants.ts';
 
   interface DeckFlashcardsListHeadingProps {
     dueFlashcards: number;
+    totalFlashcards: number;
+    mode: DeckDetailsMode;
   }
 
-  const { dueFlashcards } = defineProps<DeckFlashcardsListHeadingProps>();
+  const { dueFlashcards, mode, totalFlashcards } = defineProps<DeckFlashcardsListHeadingProps>();
+  const emit = defineEmits(['modeChange']);
 </script>
 
 <template>
   <section>
     <div>
       <Button
-        v-if="dueFlashcards > 0"
+        v-if="mode === DeckDetailsMode.List"
+        :disabled="dueFlashcards === 0"
         :label="translate(DeckDetailsTranslations.Heading.Actions.StudyDueCards, { quantity: String(dueFlashcards) })"
         icon="pi pi-clock"
+        @click="emit('modeChange', DeckDetailsMode.StudyDue)"
       />
-      <Button :label="translate(DeckDetailsTranslations.Heading.Actions.StudyAllCards)" icon="pi pi-list" severity="secondary" />
+      <Button
+        v-if="mode === DeckDetailsMode.List"
+        :label="translate(DeckDetailsTranslations.Heading.Actions.StudyAllCards)"
+        icon="pi pi-list"
+        :disabled="totalFlashcards === 0"
+        severity="secondary"
+        @click="emit('modeChange', DeckDetailsMode.StudyAll)"
+      />
+      <Button
+        v-if="mode !== DeckDetailsMode.List"
+        :label="translate(DeckDetailsTranslations.Heading.Actions.ExitStudyMode)"
+        severity="secondary"
+        @click="emit('modeChange', DeckDetailsMode.List)"
+      />
     </div>
     <DeckDetailsAddFlashcardButton />
   </section>
