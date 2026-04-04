@@ -17,6 +17,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-vue": "^10.8.0",
+    "md-editor-v3": "^6.4.1",
     "pinia": "^3.0.4",
     "prettier": "^3.8.1",
     "primeicons": "^7.0.0",

@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { translate } from '../../../../components/translation/translate.ts';
   import Translation from '../../../../components/translation/Translation.vue';
-  import Textarea from 'primevue/textarea';
   import FormFieldWrapper from '../../../../components/form/FormFieldWrapper.vue';
   import { CreateFlashcardTranslations } from '../constants/translations.constants.ts';
   import { computed, reactive, watch } from 'vue';
@@ -15,6 +14,7 @@
   import type { CreateFlashcardModel } from '../../../../interfaces/flashcards.interfaces.ts';
   import { AppRoutes } from '../../../../router/router.ts';
   import { QueryKeys } from '../../../../constants/query.constants.ts';
+  import CreateFlashcardFormEditorFormField from './CreateFlashcardFormEditorFormField.vue';
 
   const currentRoute = useRoute();
   const deckId = currentRoute.params.deckId as string;
@@ -87,14 +87,12 @@
       <label :for="FlashcardsFormFields.Question">
         <Translation :id="CreateFlashcardTranslations.FormFields.Question.Label" />
       </label>
-      <Textarea
+      <CreateFlashcardFormEditorFormField
         :id="FlashcardsFormFields.Question"
-        :name="FlashcardsFormFields.Question"
+        height="short"
         :disabled="isSubmitting || isFetchingEditedFlashcardData"
         v-model="formState[FlashcardsFormFields.Question]"
         :placeholder="translate(CreateFlashcardTranslations.FormFields.Question.Placeholder)"
-        rows="5"
-        fluid
       />
       <FormFieldTip :text="translate(CreateFlashcardTranslations.FormFields.Question.Tip)" severity="info" />
     </FormFieldWrapper>
@@ -102,14 +100,12 @@
       <label :for="FlashcardsFormFields.Answer">
         <Translation :id="CreateFlashcardTranslations.FormFields.Answer.Label" />
       </label>
-      <Textarea
+      <CreateFlashcardFormEditorFormField
         :id="FlashcardsFormFields.Answer"
-        :name="FlashcardsFormFields.Answer"
+        height="tall"
         :disabled="isSubmitting || isFetchingEditedFlashcardData"
         v-model="formState[FlashcardsFormFields.Answer]"
         :placeholder="translate(CreateFlashcardTranslations.FormFields.Answer.Placeholder)"
-        rows="8"
-        fluid
       />
       <FormFieldTip :text="translate(CreateFlashcardTranslations.FormFields.Answer.Tip)" severity="info" />
     </FormFieldWrapper>
