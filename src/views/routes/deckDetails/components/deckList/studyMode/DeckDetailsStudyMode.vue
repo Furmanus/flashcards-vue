@@ -44,6 +44,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 2rem;
+    flex-grow: 1;
   }
   .buttons {
     display: flex;

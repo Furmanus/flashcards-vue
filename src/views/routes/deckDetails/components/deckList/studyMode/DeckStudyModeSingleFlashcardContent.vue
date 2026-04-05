@@ -26,6 +26,7 @@
   .content {
     width: 100%;
     text-align: left;
+    flex-grow: 1;
     background-color: var(--p-content-hover-background);
   }
 </style>

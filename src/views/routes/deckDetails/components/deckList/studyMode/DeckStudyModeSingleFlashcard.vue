@@ -47,6 +47,9 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
+    min-height: 0;
+    overflow: auto;
+    flex-grow: 1;
 
     @media (prefers-color-scheme: dark) {
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
