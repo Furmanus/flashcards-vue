@@ -8,11 +8,12 @@
     id: Translation;
     tag?: keyof HTMLElementTagNameMap;
     values?: Record<string, string>;
+    noMargin?: boolean;
     size?: TypographySizes;
     color?: 'primary' | 'secondary' | 'error';
   }
 
-  const { id, tag = 'span', color = 'primary', values = {}, size } = defineProps<TranslationProps>();
+  const { id, tag = 'span', color = 'primary', values = {}, size, noMargin } = defineProps<TranslationProps>();
   const textColor = computed(() => {
     switch (color) {
       case 'primary':
@@ -38,7 +39,7 @@
 </script>
 
 <template>
-  <component :is="tag" :class="{ translation: true, translationSize: !!computedSize }">{{ translatedValue }}</component>
+  <component :is="tag" :class="{ translation: true, translationSize: !!computedSize, noMargin: noMargin }">{{ translatedValue }}</component>
 </template>
 
 <style scoped>
@@ -47,5 +48,8 @@
   }
   .translationSize {
     font-size: v-bind(computedSize);
+  }
+  .noMargin {
+    margin-block: 0;
   }
 </style>

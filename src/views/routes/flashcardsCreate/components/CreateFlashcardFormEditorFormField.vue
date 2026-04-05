@@ -23,6 +23,7 @@
     class="editorFormField"
     :editorId="props.id"
     :preview="true"
+    inputBoxWidth="70%"
     :disabled="props.disabled"
     :theme="currentTheme"
   />

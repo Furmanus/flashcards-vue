@@ -40,5 +40,9 @@ export const DeckDetailsTranslations = {
         Title: ['Remind me again in:'],
       },
     },
+    Buttons: {
+      Next: ['Next'],
+      Previous: ['Previous'],
+    },
   },
 } as const;
