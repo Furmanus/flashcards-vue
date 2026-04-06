@@ -2,7 +2,7 @@
   import type { FlashcardModel } from '../../../../../../interfaces/flashcards.interfaces.ts';
   import Translation from '../../../../../../components/translation/Translation.vue';
   import { DeckDetailsTranslations } from '../../../constants/translations.constants.ts';
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import DeckStudyModeSingleFlashcardRemindMe from './DeckStudyModeSingleFlashcardRemindMe.vue';
   import DeckStudyModeSingleFlashcardContent from './DeckStudyModeSingleFlashcardContent.vue';
 
@@ -10,26 +10,40 @@
     flashcard: FlashcardModel;
   }
 
-  const { flashcard } = defineProps<DeckStudyModeSingleFlashcardProps>();
+  const props = defineProps<DeckStudyModeSingleFlashcardProps>();
   const side = ref<'front' | 'back'>('front');
   const headingKey = computed(() =>
     side.value === 'front'
       ? DeckDetailsTranslations.StudyMode.Flashcard.HeadingFront
       : DeckDetailsTranslations.StudyMode.Flashcard.HeadingBack,
   );
+
+  watch(
+    () => props.flashcard,
+    (newFlashcard, oldFlashcard) => {
+      if (newFlashcard.id !== oldFlashcard.id) {
+        side.value = 'front';
+      }
+    },
+  );
 </script>
 
 <template>
   <aside class="flashcard">
     <Translation class="heading" :id="headingKey" tag="h4" size="lg" color="primary" />
-    <DeckStudyModeSingleFlashcardContent :content="flashcard.front" :flashcardId="flashcard.id" type="question" v-if="side === 'front'" />
-    <DeckStudyModeSingleFlashcardContent :content="flashcard.back" :flashcardId="flashcard.id" type="answer" v-else />
+    <DeckStudyModeSingleFlashcardContent
+      :content="props.flashcard.front"
+      :flashcardId="props.flashcard.id"
+      type="question"
+      v-if="side === 'front'"
+    />
+    <DeckStudyModeSingleFlashcardContent :content="props.flashcard.back" :flashcardId="props.flashcard.id" type="answer" v-else />
     <footer class="footer">
       <div class="flipButton" role="button" @click.stop="side = side === 'front' ? 'back' : 'front'">
         <i class="pi pi-refresh" style="font-size: 0.825rem"></i>
         <Translation :id="DeckDetailsTranslations.StudyMode.Flashcard.FlipButton" />
       </div>
-      <DeckStudyModeSingleFlashcardRemindMe v-if="side === 'back'" :flashcard="flashcard" />
+      <DeckStudyModeSingleFlashcardRemindMe v-if="side === 'back'" :flashcard="props.flashcard" />
     </footer>
   </aside>
 </template>
