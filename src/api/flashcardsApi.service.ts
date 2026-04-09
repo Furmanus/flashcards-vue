@@ -45,7 +45,6 @@ class FlashcardsApiService {
         }
       }
     }
-    console.log('AFTER GETTING');
 
     return decks;
   }
