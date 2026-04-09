@@ -27,7 +27,7 @@
     align-items: center;
     padding-bottom: 1rem;
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       flex-direction: column;
     }
   }
