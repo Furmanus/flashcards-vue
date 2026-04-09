@@ -45,6 +45,10 @@
     align-items: center;
     gap: 2rem;
     flex-grow: 1;
+
+    @media (max-width: 480px) {
+      gap: 1rem;
+    }
   }
   .buttons {
     display: flex;

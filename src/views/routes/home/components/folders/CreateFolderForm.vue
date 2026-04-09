@@ -59,12 +59,19 @@
         :disabled="asyncStatus !== 'idle'"
       />
     </FormFieldWrapper>
-    <Button type="submit" @submit="handleSubmit">
-      <Translation :id="HomeViewTranslations.CreateFolder.Buttons.Create" />
-    </Button>
-    <Button type="button" severity="secondary" @click="HomeViewStore.showCreateDeckForm = false">
-      <Translation :id="HomeViewTranslations.CreateFolder.Buttons.Cancel" />
-    </Button>
+    <Button
+      type="submit"
+      icon="pi pi-check"
+      @submit="handleSubmit"
+      :aria-label="translate(HomeViewTranslations.CreateFolder.Buttons.Create)"
+    />
+    <Button
+      type="button"
+      severity="secondary"
+      icon="pi pi-times"
+      @click="HomeViewStore.showCreateDeckForm = false"
+      :aria-label="translate(HomeViewTranslations.CreateFolder.Buttons.Cancel)"
+    />
   </form>
   <Toast />
 </template>
@@ -80,5 +87,9 @@
     border: 1px solid var(--p-content-border-color);
     border-radius: var(--p-border-radius-lg);
     margin-bottom: 1.5rem;
+
+    @media (max-width: 480px) {
+      gap: 0.75rem;
+    }
   }
 </style>

@@ -26,6 +26,10 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 1rem;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
   }
   .button-container {
     display: flex;

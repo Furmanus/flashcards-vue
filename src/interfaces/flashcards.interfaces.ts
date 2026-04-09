@@ -24,6 +24,7 @@ export type FlashcardFolderModel = {
   name: string;
 };
 
-export type FolderPresentationModel = FlashcardFolderModel & { decks: DeckModel[] };
-export type DeckPresentationModel = DeckModel & { flashcards: FlashcardModel[] };
+export type FolderPresentationModel = FlashcardFolderModel & { decks: DeckPresentationModel[] };
+export type DeckPresentationModel = DeckModel & { flashcardsCount: number };
+export type DeckModelWithFlashcards = DeckModel & { flashcards: FlashcardModel[] };
 export type CreateFlashcardModel = z.infer<typeof CreateFlashcardSchema>;

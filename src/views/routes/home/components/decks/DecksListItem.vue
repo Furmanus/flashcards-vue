@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import type { DeckModel } from '../../../../../interfaces/flashcards.interfaces.ts';
+  import type { DeckPresentationModel } from '../../../../../interfaces/flashcards.interfaces.ts';
   import Translation from '../../../../../components/translation/Translation.vue';
   import { HomeViewTranslations } from '../../constants/translations.constants.ts';
   import { AppRoutes } from '../../../../../router/router.ts';
   import { useRouter } from 'vue-router';
 
   interface DecksListItemProps {
-    deck: DeckModel;
+    deck: DeckPresentationModel;
   }
 
   const { deck } = defineProps<DecksListItemProps>();
@@ -26,7 +26,12 @@
         <h4 class="heading" :title="deck.name">{{ deck.name }}</h4>
         <p class="description" :title="deck.description">{{ deck.description }}</p>
       </div>
-      <Translation class="quantity" :id="HomeViewTranslations.DeckList.DeckCard.CardQuantity" :values="{ quantity: '0' }" tag="p" />
+      <Translation
+        class="quantity"
+        :id="HomeViewTranslations.DeckList.DeckCard.CardQuantity"
+        :values="{ quantity: String(deck.flashcardsCount ?? 0) }"
+        tag="p"
+      />
     </a>
   </li>
 </template>

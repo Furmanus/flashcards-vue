@@ -26,4 +26,12 @@ body {
   text-align: center;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: 2rem 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem 0.5rem;
+  }
 }

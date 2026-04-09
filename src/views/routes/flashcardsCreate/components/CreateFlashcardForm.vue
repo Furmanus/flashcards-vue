@@ -130,6 +130,14 @@
     border-radius: 0.5rem;
     background-color: var(--p-content-hover-background);
 
+    @media (max-width: 768px) {
+      padding: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 1rem;
+    }
+
     & textarea {
       resize: none;
     }

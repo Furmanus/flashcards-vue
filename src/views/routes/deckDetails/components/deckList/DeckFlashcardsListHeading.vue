@@ -16,7 +16,7 @@
 </script>
 
 <template>
-  <section>
+  <section :class="{ study: mode !== DeckDetailsMode.List }">
     <div>
       <Button
         v-if="mode === DeckDetailsMode.List"
@@ -51,10 +51,20 @@
     justify-content: space-between;
     align-items: center;
 
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 1rem;
+
+      &.study {
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+    }
+
     & > div {
       display: flex;
       flex-direction: row;
-      gap: 0.5rem;
+      gap: 1rem;
     }
   }
 </style>

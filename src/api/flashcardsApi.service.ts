@@ -1,6 +1,7 @@
 import type {
   CreateFlashcardModel,
   DeckModel,
+  DeckModelWithFlashcards,
   DeckPresentationModel,
   FlashcardFolderModel,
   FlashcardModel,
@@ -32,11 +33,11 @@ class FlashcardsApiService {
         const deck = decks.find((deck) => deck.id === flashcard.deckId);
 
         if (deck) {
-          if (!deck.flashcards) {
-            deck.flashcards = [];
+          if (!deck.flashcardsCount) {
+            deck.flashcardsCount = 0;
           }
 
-          deck.flashcards.push(flashcard);
+          deck.flashcardsCount += 1;
         }
       }
     }
@@ -44,15 +45,16 @@ class FlashcardsApiService {
     return decks;
   }
 
-  public async getDeckDetails(id: string, {}: FetchOptions = {}): Promise<DeckPresentationModel | undefined> {
+  public async getDeckDetails(id: string, {}: FetchOptions = {}): Promise<DeckModelWithFlashcards | undefined> {
     const decks = await this.getDecks();
     const flashcards = await this.getFlashcards();
     const deck = decks.find((deck) => deck.id === id);
 
     if (deck) {
-      deck.flashcards = flashcards.filter((flashcard) => flashcard.deckId === deck.id);
-
-      return deck;
+      return {
+        ...deck,
+        flashcards: flashcards.filter((flashcard) => flashcard.deckId === deck.id),
+      };
     }
   }
 

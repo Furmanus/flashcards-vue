@@ -51,7 +51,7 @@
 <style scoped>
   .flashcard {
     padding: 1rem 2rem;
-    width: 48rem;
+    width: min(48rem, 100%);
     aspect-ratio: 16/9;
     border-radius: var(--p-border-radius-lg);
     background-color: var(--p-content-hover-background);
@@ -67,6 +67,10 @@
 
     @media (prefers-color-scheme: dark) {
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (max-width: 480px) {
+      padding: 1rem 0.5rem;
     }
 
     & .heading {
@@ -89,6 +93,10 @@
       align-items: flex-start;
       justify-content: flex-start;
       width: 100%;
+
+      @media (max-width: 480px) {
+        font-size: 13px;
+      }
     }
   }
 </style>

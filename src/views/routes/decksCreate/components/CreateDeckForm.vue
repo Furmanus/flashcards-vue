@@ -162,6 +162,14 @@
     flex-direction: column;
     gap: 1rem;
 
+    @media (max-width: 768px) {
+      padding-inline: 3rem;
+    }
+
+    @media (max-width: 480px) {
+      padding-inline: 1rem;
+    }
+
     & textarea {
       resize: none;
     }

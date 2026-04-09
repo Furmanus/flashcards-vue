@@ -29,4 +29,14 @@
     flex-grow: 1;
     background-color: var(--p-content-hover-background);
   }
+
+  @media (max-width: 480px) {
+    .content :deep(.md-editor-preview),
+    .content :deep(.md-editor-preview p),
+    .content :deep(.md-editor-preview li),
+    .content :deep(code),
+    .content :deep(.md-editor-preview span) {
+      font-size: 13px !important;
+    }
+  }
 </style>

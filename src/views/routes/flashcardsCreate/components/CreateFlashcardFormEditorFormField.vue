@@ -3,6 +3,7 @@
   import 'md-editor-v3/lib/style.css';
   import { useTheme } from '../../../../composables/useTheme.ts';
   import { computed } from 'vue';
+  import { useMediaDevice } from '../../../../composables/useMediaDevice.ts';
 
   interface CreateFlashcardFormEditorFormFieldProps {
     id: string;
@@ -13,6 +14,7 @@
   const model = defineModel<string>({ default: '' });
   const props = defineProps<CreateFlashcardFormEditorFormFieldProps>();
   const currentTheme = useTheme();
+  const isMobilePhone = useMediaDevice('mobile');
   const heightValue = computed(() => (props.height === 'tall' ? '480px' : '240px'));
 </script>
 
@@ -23,7 +25,7 @@
     class="editorFormField"
     :editorId="props.id"
     :preview="true"
-    inputBoxWidth="70%"
+    :inputBoxWidth="isMobilePhone ? '100%' : '70%'"
     :disabled="props.disabled"
     :theme="currentTheme"
   />

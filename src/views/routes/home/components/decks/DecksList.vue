@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import type { DeckModel } from '../../../../../interfaces/flashcards.interfaces.ts';
+  import type { DeckPresentationModel } from '../../../../../interfaces/flashcards.interfaces.ts';
   import DecksListItem from './DecksListItem.vue';
 
   type DecksListProps = {
-    decks: DeckModel[];
+    decks: DeckPresentationModel[];
   };
 
   const { decks } = defineProps<DecksListProps>();

@@ -90,7 +90,7 @@
           <Badge size="small">{{ folder.decks.length }}</Badge>
         </div>
       </div>
-      <div class="listItemRight">
+      <div class="listItemRight" v-if="!isEditing">
         <Button severity="secondary" size="small" icon="pi pi-pencil" aria-label="Edit folder" @click="handleEditClick" />
         <Button severity="secondary" size="small" icon="pi pi-trash" aria-label="Delete folder" @click.stop="emit('delete', folder.id)" />
       </div>
