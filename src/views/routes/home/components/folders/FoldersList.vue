@@ -57,10 +57,10 @@
     <FoldersListEntry v-for="folder in folders || []" :key="folder.id" :folder="folder" @delete="handleDelete" />
   </ul>
   <section class="uncategorizedDecks" v-if="uncategorizedDecksFolder && uncategorizedDecksFolder.decks.length > 0">
-    <Translation :id="HomeViewTranslations.DeckList.UncategorizedDecks.Heading" tag="h3" />
-    <ul class="uncategorizedDecksList">
+    <Translation :id="HomeViewTranslations.DeckList.UncategorizedDecks.Heading" tag="h3" class="heading" />
+    <div class="uncategorizedDecksList">
       <DecksList :decks="uncategorizedDecksFolder.decks" v-if="uncategorizedDecksFolder && uncategorizedDecksFolder.decks.length > 0" />
-    </ul>
+    </div>
   </section>
   <Dialog
     :visible="deleteFolderDialogAttemptId !== ''"
@@ -95,18 +95,29 @@
   }
 
   .uncategorizedDecks {
-    & > h3 {
+    & > .heading {
       margin-block: 2rem;
       text-align: left;
+
+      @media (max-width: 480px) {
+        text-align: center;
+      }
     }
   }
 
   .uncategorizedDecksList {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding-inline-start: 0;
+    & > ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      padding-inline-start: 0;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
   }
 
   .dialog {

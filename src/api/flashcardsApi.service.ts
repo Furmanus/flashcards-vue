@@ -28,6 +28,10 @@ class FlashcardsApiService {
     const decks = getDecksMockData() as DeckPresentationModel[];
     const flashcards = await this.getFlashcards();
 
+    for (const deck of decks) {
+      deck.flashcardsCount = 0;
+    }
+
     for (const flashcard of flashcards) {
       if (flashcard.deckId) {
         const deck = decks.find((deck) => deck.id === flashcard.deckId);
@@ -41,6 +45,7 @@ class FlashcardsApiService {
         }
       }
     }
+    console.log('AFTER GETTING');
 
     return decks;
   }
